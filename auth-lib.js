@@ -103,25 +103,15 @@ function userGroups(user) {
 };
 
 function removeUserFromGroup(user,group) {
-	var count=0;
-	var count1=0;
-	for(var i=0;i<allUsers.length;i++){
-		if(user==allUsers[i] && typeof user==='object' && group in allGroups){
-			count++;
-			for(var j=0;j<user.groups.length;j++){
-				if(user.groups[j]==group){
-					count1++;
-					user.groups.splice(j,1);
-				}
-			}
-		}
-	}
-	if(count==0){
+	if(allUsers.includes(user) && typeof user==='object'  && typeof group==='string'){
+		if(!user.groups.includes(group)){
+			throw new Error('user not in group');
+		}	
+		user.groups.splice(user.groups.indexOf(group),1);
+	}	
+	else{	
 		throw new Error('Error from removeUserFromGroup');
-	}
-	if (count1==0) {
-		throw new Error('user not in group');
-	};	
+		}	
 };
 
 function createRight() {
@@ -158,14 +148,10 @@ function rights() {
 };
 
 function addRightToGroup(right,group) {
-	var count=0;
-	for(var i=0;i<allRights.length;i++){
-		if(right!=undefined && group!=undefined && allRights[i]==right && group in allGroups){
-			count++;
-			allGroups[group].push(right);
-		}
+	if(right!=undefined && group!=undefined && allRights.includes(right) && group in allGroups){
+		allGroups[group].push(right);		
 	}
-	if(count==0){
+	else{
 		throw new Error('Error from addRightToGroup');
 	}
 };
@@ -223,15 +209,17 @@ var ra=createRight();
 console.log(gr);
 console.log(ra);
 
+console.log("admin" in allGroups);
 
-addRightToGroup(ra,gr);
-removeRightFromGroup(ra,gr);
-console.log(groupRights(gr));
-console.log(allRights);
+/*
+var a = [1,2,3,4,5];
+alert(ReverseArray(a));
 
-deleteRight(ra);
-console.log(allRights);
-console.log(groupRights(gr));
-
-
-
+function ReverseArray(arr) {
+    if(arr.length < 2) {
+        return arr;
+    } else {
+        return [arr.pop()].concat(ReverseArray(arr));
+    }
+}
+*/
